@@ -280,9 +280,6 @@ class Manager(QtCore.QObject):
         logger.info("Starting Manager configuration from {0}".format(
             configFile))
         cfg = config.load(configFile)
-        ########################### for debugging ################################
-        # print(cfg)
-        ##########################################################################
         self.configFile = configFile
         # Read modules, devices, and stylesheet out of config
         self.configure(cfg)
@@ -309,10 +306,6 @@ class Manager(QtCore.QObject):
             try:
                 # hardware
                 if key == 'hardware' and cfg['hardware'] is not None:
-                    ########################## for debugging ###########################
-                    # print(cfg['hardware'])
-                    ####################################################################
-
                     for m in cfg['hardware']:
                         if 'module.Class' in cfg['hardware'][m]:
                             self.tree['defined']['hardware'][
@@ -320,12 +313,6 @@ class Manager(QtCore.QObject):
                         else:
                             logger.warning('    --> Ignoring device {0} -- '
                                            'no module specified'.format(m))
-                    ##################### for debugging ################################
-                    
-                    # print(self.tree['defined']['hardware'])
-                    # print('#'*50)
-
-                    ####################################################################
 
                 # logic
                 elif key == 'logic' and cfg['logic'] is not None:
@@ -1094,10 +1081,6 @@ class Manager(QtCore.QObject):
             logger.error('{0} module {1}: no such module defined'.format(base, key))
             return None
         defined_module = self.tree['defined'][base][key]
-        ############################## for debugging ####################################
-        # print(defined_module)
-        # print(self.tree['defined'])
-        #################################################################################
         if 'connect' not in defined_module:
             return dict()
         if not isinstance(defined_module['connect'], OrderedDict):
@@ -1127,10 +1110,6 @@ class Manager(QtCore.QObject):
             elif destmod in self.tree['defined']['logic']:
                 destbase = 'logic'
             else:
-                ###################### for debugging #################################
-                # print(defined_module)
-                # print(self.tree['defined']['hardware'])
-                ######################################################################
                 logger.error('Unique name {0} is neither in hardware or '
                              'logic module list. Cannot connect {1} '
                              'to it.'.format(connections[c], key))

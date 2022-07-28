@@ -22,6 +22,7 @@ top-level directory of this distribution and at <https://github.com/Ulm-IQO/qudi
 from interface.slow_counter_interface import SlowCounterConstraints
 from interface.slow_counter_interface import CountingMode
 from .national_instruments_x_series import NationalInstrumentsXSeries
+# from core.configoption import ConfigOption
 
 
 class SlowGatedNICard(NationalInstrumentsXSeries):
