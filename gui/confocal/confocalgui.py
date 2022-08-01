@@ -877,6 +877,7 @@ class ConfocalGui(GUIBase):
     def update_settings(self):
         """ Write new settings from the gui to the file. """
         self._scanning_logic.set_clock_frequency(self._sd.clock_frequency_InputWidget.value())
+        self._scanning_logic.set_duty_cycle(self._sd.duty_cycle_InputWidget.value())
         self._scanning_logic.return_slowness = self._sd.return_slowness_InputWidget.value()
         self._scanning_logic.permanent_scan = self._sd.loop_scan_CheckBox.isChecked()
         self._scanning_logic.depth_scan_dir_is_xz = self._sd.depth_dir_x_radioButton.isChecked()
@@ -895,6 +896,7 @@ class ConfocalGui(GUIBase):
     def keep_former_settings(self):
         """ Keep the old settings and restores them in the gui. """
         self._sd.clock_frequency_InputWidget.setValue(int(self._scanning_logic._clock_frequency))
+        self._sd.duty_cycle_InputWidget.setValue(float(self._scanning_logic._duty_cycle))
         self._sd.return_slowness_InputWidget.setValue(int(self._scanning_logic.return_slowness))
         self._sd.loop_scan_CheckBox.setChecked(self._scanning_logic.permanent_scan)
         if self._scanning_logic.depth_scan_dir_is_xz:

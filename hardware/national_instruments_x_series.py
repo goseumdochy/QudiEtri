@@ -102,6 +102,7 @@ class NationalInstrumentsXSeries(Base, SlowCounterInterface, ConfocalScannerInte
 
     # confocal scanner
     _default_scanner_clock_frequency = ConfigOption('default_scanner_clock_frequency', 100, missing='info')
+    _default_duty_cycle = ConfigOption('default_duty_cycle', 0.5, missing = 'info')
     _scanner_clock_channel = ConfigOption('scanner_clock_channel', missing='warn')
     _pixel_clock_channel = ConfigOption('pixel_clock_channel', None)
     _scanner_ao_channels = ConfigOption('scanner_ao_channels', missing='error')
@@ -196,7 +197,7 @@ class NationalInstrumentsXSeries(Base, SlowCounterInterface, ConfocalScannerInte
         constraints.counting_mode = [CountingMode.CONTINUOUS]
         return constraints
 
-    def set_up_clock(self, clock_frequency=None, clock_channel=None, scanner=False, idle=False):
+    def set_up_clock(self, clock_frequency=None, clock_channel=None, scanner=False, idle=False, duty_cycle=None):
         """ Configures the hardware clock of the NiDAQ card to give the timing.
 
         @param float clock_frequency: if defined, this sets the frequency of
@@ -237,6 +238,12 @@ class NationalInstrumentsXSeries(Base, SlowCounterInterface, ConfocalScannerInte
                 self._clock_frequency = self._default_clock_frequency
             else:
                 self._scanner_clock_frequency = self._default_scanner_clock_frequency
+                
+        # assign the duty cycle, if given
+        if duty_cycle is not None:
+            self._duty_cycle = float(duty_cycle)
+        else:
+            self._duty_cycle = self._default_duty_cycle
 
         # use the correct clock in this method
         if scanner:
@@ -294,7 +301,7 @@ class NationalInstrumentsXSeries(Base, SlowCounterInterface, ConfocalScannerInte
                 my_clock_frequency / 2,
                 # duty cycle of pulses, 0.5 such that high and low duration are both
                 # equal to count_interval
-                0.5)
+                duty_cycle)
 
             # Configure Implicit Timing.
             # Set timing to continuous, i.e. set only the number of samples to
@@ -867,7 +874,7 @@ class NationalInstrumentsXSeries(Base, SlowCounterInterface, ConfocalScannerInte
             retval = -1
         return retval
 
-    def set_up_scanner_clock(self, clock_frequency=None, clock_channel=None):
+    def set_up_scanner_clock(self, clock_frequency=None, clock_channel=None, duty_cycle=None):
         """ Configures the hardware clock of the NiDAQ card to give the timing.
 
         @param float clock_frequency: if defined, this sets the frequency of
@@ -883,7 +890,8 @@ class NationalInstrumentsXSeries(Base, SlowCounterInterface, ConfocalScannerInte
         return self.set_up_clock(
             clock_frequency=clock_frequency,
             clock_channel=clock_channel,
-            scanner=True)
+            scanner=True,
+            duty_cycle=duty_cycle)
 
     def set_up_scanner(self,
                        counter_channels=None,

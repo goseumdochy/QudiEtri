@@ -245,9 +245,9 @@ class Manager(QtCore.QObject):
             except Exception:
                 logger.exception('Error while handling load.cfg.')
         # try config/example/custom.cfg next
-        cf = os.path.join(path, 'config', 'local', 'myconfig.cfg')
-        if os.path.isfile(cf):
-            return cf
+        # cf = os.path.join(path, 'config', 'local', 'myconfig.cfg')
+        # if os.path.isfile(cf):
+        #     return cf
         # try config/example/default.cfg
         cf = os.path.join(path, 'config', 'example', 'default.cfg')
         if os.path.isfile(cf):

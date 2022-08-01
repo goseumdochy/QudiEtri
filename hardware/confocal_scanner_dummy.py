@@ -220,7 +220,7 @@ class ConfocalScannerDummy(Base, ConfocalScannerInterface):
         """ 3 counting channels in dummy confocal: normal, negative and a ramp."""
         return ['Norm', 'Neg', 'Ramp']
 
-    def set_up_scanner_clock(self, clock_frequency=None, clock_channel=None):
+    def set_up_scanner_clock(self, clock_frequency=None, clock_channel=None, duty_cycle=None):
         """ Configures the hardware clock of the NiDAQ card to give the timing.
 
         @param float clock_frequency: if defined, this sets the frequency of the
@@ -233,6 +233,8 @@ class ConfocalScannerDummy(Base, ConfocalScannerInterface):
 
         if clock_frequency is not None:
             self._clock_frequency = float(clock_frequency)
+        if duty_cycle is not None:
+            self._duty_cycle = float(duty_cycle)
 
         self.log.debug('ConfocalScannerDummy>set_up_scanner_clock')
         time.sleep(0.2)

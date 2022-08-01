@@ -259,6 +259,7 @@ class ConfocalLogic(GenericLogic):
 
     # status vars
     _clock_frequency = StatusVar('clock_frequency', 500)
+    _duty_cycle = StatusVar('duty_cycle', 0.5)
     return_slowness = StatusVar(default=50)
     max_history_length = StatusVar(default=10)
 
@@ -383,6 +384,20 @@ class ConfocalLogic(GenericLogic):
         @return int: error code (0:OK, -1:error)
         """
         self._clock_frequency = int(clock_frequency)
+        #checks if scanner is still running
+        if self.module_state() == 'locked':
+            return -1
+        else:
+            return 0
+        
+    def set_duty_cycle(self, duty_cycle):
+        """Sets the duty cycle of the scanning logic
+        
+        @param float duty_cycle: desired duty cycle of the scannig logic
+        
+        @return int: error code (0:OK, -1:error
+        """
+        self._duty_cycle = float(duty_cycle)
         #checks if scanner is still running
         if self.module_state() == 'locked':
             return -1
@@ -578,7 +593,7 @@ class ConfocalLogic(GenericLogic):
             return -1
 
         clock_status = self._scanning_device.set_up_scanner_clock(
-            clock_frequency=self._clock_frequency)
+            clock_frequency=self._clock_frequency, duty_cycle=self._duty_cycle)
 
         if clock_status < 0:
             self._scanning_device.module_state.unlock()
@@ -607,7 +622,7 @@ class ConfocalLogic(GenericLogic):
         self._scanning_device.module_state.lock()
 
         clock_status = self._scanning_device.set_up_scanner_clock(
-            clock_frequency=self._clock_frequency)
+            clock_frequency=self._clock_frequency, duty_cycle=self._duty_cycle)
 
         if clock_status < 0:
             self._scanning_device.module_state.unlock()
@@ -895,6 +910,7 @@ class ConfocalLogic(GenericLogic):
         parameters['XY Image at z position (m)'] = self._current_z
 
         parameters['Clock frequency of scanner (Hz)'] = self._clock_frequency
+        parameters['Duty cycle of scanner (ratio)'] = self._duty_cycle
         parameters['Return Slowness (Steps during retrace line)'] = self.return_slowness
 
         # Prepare a figure to be saved
@@ -999,6 +1015,7 @@ class ConfocalLogic(GenericLogic):
         parameters['Depth Image at y position (m)'] = self._current_y
 
         parameters['Clock frequency of scanner (Hz)'] = self._clock_frequency
+        parameters['Duty cycle of scanner (ratio)'] = self._duty_cycle
         parameters['Return Slowness (Steps during retrace line)'] = self.return_slowness
 
         if self.depth_img_is_xz:
